@@ -1,9 +1,0 @@
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/CMakeFiles/main.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/kursovaja/CMakeFiles/kursovaja.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/kursovaja/CMakeFiles/edit_cache.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/kursovaja/CMakeFiles/rebuild_cache.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/glad.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/edit_cache.dir
-C:/Users/ant/Desktop/GitHub/kursovaja/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/rebuild_cache.dir
