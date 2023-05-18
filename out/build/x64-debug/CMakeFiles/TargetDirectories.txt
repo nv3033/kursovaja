@@ -1,0 +1,17 @@
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/CMakeFiles/IntoTheVoidEngine.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/CMakeFiles/rebuild_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/src/CMakeFiles/glfw.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/src/CMakeFiles/update_mappings.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/src/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glfw/src/CMakeFiles/rebuild_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/glad.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/glad/CMakeFiles/rebuild_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/imgui/CMakeFiles/ImGui.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/imgui/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/imgui/CMakeFiles/rebuild_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/linmath/CMakeFiles/edit_cache.dir
+C:/Users/ant/Desktop/GitHub/kursovaja/out/build/x64-debug/external/linmath/CMakeFiles/rebuild_cache.dir
