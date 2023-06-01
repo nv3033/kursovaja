@@ -1,6 +1,6 @@
 ﻿#include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+//#include <glad/glad.h>
+//#include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
@@ -9,7 +9,11 @@
 #include "include/Window_header.h"
 #include "include/console_ui.h"
 #include "include/shaders/shader.h"
-#include "include/graphics.h"
+#include <linmath/linmath.h>
+#include "include/graphics_editor.h"
+#include "include/objectss.h"
+#include "include/Camera.h"
+#include <array>
 
 
 static int start_engine() {
@@ -17,10 +21,9 @@ static int start_engine() {
     return 0;
 }
 
-
-
 static int open_engine_editor() {
-    window window_console(1280, 720, "console");
+
+    window window_console(640, 640, "console");
     window_console.create();
 
     IMGUI_CHECKVERSION();
@@ -30,9 +33,6 @@ static int open_engine_editor() {
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize.x = 1280;
     io.DisplaySize.y = 720;
-    
-    //Triangle tr1;
-    //tr1.Init(1, 0, 0);
 
     console con;
     bool open = true;
@@ -40,15 +40,15 @@ static int open_engine_editor() {
         "C:/users/ant/Desktop/GitHub/kursovaja/src/include/shaders/fragment/triangle-shader.fs");
     while (!glfwWindowShouldClose(window_console.get_glfw_window()))
     {
-        glClearColor(0, 1, 1, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0, 0, 0, 1);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         shader.use();
+
+
         
-        //tr1.draw_triangle();
         con.Draw("console", &open);
 
         ImGui::Render();
@@ -56,6 +56,8 @@ static int open_engine_editor() {
 
         glfwSwapBuffers(window_console.get_glfw_window());
         glfwPollEvents();
+
+        glClear(GL_COLOR_BUFFER_BIT);
     }
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -65,12 +67,82 @@ static int open_engine_editor() {
 
 static int engine_close() { return 1; }
 
+static int open_engine_game() {
+
+    window window_game(480, 480, "game title");
+    window_game.create();
+
+    Wall::_color_ color = { 1, 0, 0 };
+    Wall::_color_ color2 = { 0.5f, 0, 0 };
+
+    Camera c;
+
+    float perp[24];
+
+    GLfloat p[] = {
+        0.5f, -0.5f, 2,
+        0.5f, 0.5f, 2,
+        0.5f, -0.5f, 1,
+        0.5f, 0.5f, 1,
+        -0.5f, -0.5f, 1,
+        -0.5f, 0.5f, 1,
+        -0.5f, -0.5f, 2,
+        -0.5f, 0.5f, 2
+    };
+    GLfloat colors[] = {
+            color2.r, color2.g, color2.b,
+            color2.r, color2.g, color2.b,
+            color.r, color.g, color.b,
+            color.r, color.g, color.b,
+            color.r, color.g, color.b,
+            color.r, color.g, color.b,
+            color2.r, color2.g, color2.b,
+            color2.r, color2.g, color2.b
+    };
+    
+    /*for (int i = 0; i < 24; i++) {
+        if (i % 3 == 0)
+            std::cout << perspective(p)[i] << " ";
+        if (i % 3 == 1)            
+            std::cout << perspective(p)[i] << " ";
+        if (i % 3 == 2)
+            std::cout << perspective(p)[i] << std::endl;
+    }*/
+    
+    
+    Quad q;
+
+    for (int i = 0; i < 24; i++) 
+        perp[i] = c.perspective(p)[i];
+    q.Init(colors, perp, sizeof(colors), sizeof(perp));
+
+    bool open = true;
+    Shader shader("C:/users/ant/Desktop/GitHub/kursovaja/src/include/shaders/vertex/triangle-shader.vs",
+        "C:/users/ant/Desktop/GitHub/kursovaja/src/include/shaders/fragment/triangle-shader.fs");
+    while (!glfwWindowShouldClose(window_game.get_glfw_window()))
+    {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        shader.use();
+        c.rotatey(p, 0.00005f);
+        //c.translatex(p, 0.00001f);
+        for (int i = 0; i < 24; i++) 
+            perp[i] = c.perspective(p)[i];
+        q.draw_init(colors,perp, sizeof(colors), sizeof(perp));
+        q.draw_quad();
+        glfwSwapBuffers(window_game.get_glfw_window());
+        glfwPollEvents();
+    }
+    glfwTerminate();
+    return 0;
+}
 
 static int execute_input(const std::string input) {
     std::map <std::string, int> inpt;
     inpt[""] = 0;
-    inpt["start"] = 1;
+    inpt["start_editor"] = 1;
     inpt["close"] = 2;
+    inpt["start_game"] = 3;
     int i = inpt[input];
     switch (i)
     {
@@ -80,6 +152,8 @@ static int execute_input(const std::string input) {
         return open_engine_editor();
     case 2:
         return engine_close();
+    case 3:
+        return open_engine_game();
     default:
         break;
     }

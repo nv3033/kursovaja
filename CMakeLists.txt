@@ -10,8 +10,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
 
-add_executable(IntoTheVoidEngine "src/console.cpp" "src/include/Window_header.h"  "src/include/console_ui.h" "src/include/graphics.h" "src/include/console_commands.h" "src/include/objects.h" "src/include/Camera.h")
-#add_executable(IntoTheVoidEngine "external/imgui/imgui_demo.cpp")
+add_executable(IntoTheVoidEngine "src/console.cpp" "src/include/Window_header.h" "src/include/console_ui.h" "src/include/graphics_editor.h" "src/include/console_commands.h" "src/include/objectss.h" "src/include/Camera.h" "external/stb_image.h" "src/include/graphics_game.h")
 
 add_subdirectory(external/glfw)
 target_link_libraries(${PROJECT_NAME} glfw)

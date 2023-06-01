@@ -14,11 +14,13 @@
   "ExpandedNodes": [
     "",
     "\\external",
+    "\\external\\imgui",
+    "\\out",
     "\\src",
     "\\src\\include",
     "\\src\\include\\shaders",
-    "\\src\\include\\shaders\\fragment",
-    "\\src\\include\\shaders\\vertex"
+    "\\src\\include\\shaders\\fragment"
   ],
+  "SelectedNode": "\\external\\imgui\\imgui_demo.cpp",
   "PreviewInSolutionExplorer": false
 }

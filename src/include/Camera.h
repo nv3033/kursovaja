@@ -1,47 +1,87 @@
-
-#include <glfw/glfw3.h>
-#include <glad/glad.h>
 #include <vector>
 #include <map>
-#include "objects.h"
-#include "graphics.h"
+#include "objectss.h"
+#include "graphics_editor.h"
 #include <linmath/linmath.h>
+#include "stb_image.h"
 
-static void DrawUp(vec2& bl, vec2& ul, vec2& br, vec2& ur, std::vector<Hall> Halls_, int HallsCount) {
-	bl[0] = (Halls_[HallsCount].pos[0] - 1) / 1280 * 20;
-	bl[1] = (Halls_[HallsCount].pos[1] - 1) / 720 * 20;
+struct qvectors {
+	vec2 bl, ul, br, ur;
+};
 
-	ul[0] = (Halls_[HallsCount].pos[0] - 1) / 1280 * 20;
-	ul[1] = (Halls_[HallsCount].pos[1] + Halls_[HallsCount].lenght + 1) / 720 * 20;
-
-	br[0] = (Halls_[HallsCount].pos[0] + 1) / 1280 * 20;
-	br[1] = (Halls_[HallsCount].pos[1] - 1) / 720 * 20;
-
-	ur[0] = (Halls_[HallsCount].pos[0] + 1) / 1280 * 20;
-	ur[1] = (Halls_[HallsCount].pos[1] + Halls_[HallsCount].lenght + 1) / 720 * 20;
-}
+//static void DrawUp(qvectors& qv, std::vector<Wall> Halls_, int HallsCount) {
+//	qv.bl[0] = (Halls_[HallsCount].pos[0] - 1) / 1280 * 20;
+//	qv.bl[1] = (Halls_[HallsCount].pos[1] - 1) / 720 * 20;
+//
+//	qv.ul[0] = (Halls_[HallsCount].pos[0] - 1) / 1280 * 20;
+//	qv.ul[1] = (Halls_[HallsCount].pos[1] + Halls_[HallsCount].lenght + 1) / 720 * 20;
+//
+//	qv.br[0] = (Halls_[HallsCount].pos[0] + 1) / 1280 * 20;
+//	qv.br[1] = (Halls_[HallsCount].pos[1] - 1) / 720 * 20;
+//
+//	qv.ur[0] = (Halls_[HallsCount].pos[0] + 1) / 1280 * 20;
+//	qv.ur[1] = (Halls_[HallsCount].pos[1] + Halls_[HallsCount].lenght + 1) / 720 * 20;
+//}
 
 class Camera
 {
 public:
 	Camera() = default;
 	~Camera(); 
-	Quad quad[2];
-	void Camera::Init(std::vector<Hall> Halls_, int HallsCount) {
-		for (int curhall = 0; curhall < HallsCount + 1; curhall++) {
-			_color_ qcolor;
-			vec2 bl, ul, br, ur;
-			std::cout << Halls_[curhall].pos[0] << " , " << Halls_[curhall].pos[1] << std::endl << std::endl;
-			DrawUp(bl, ul, br, ur, Halls_, curhall);
-			quad[curhall].Init(Halls_[curhall].color, br, ur, bl, ul);
-			std::cout << bl[0] << " , " << bl[1] << std::endl << ul[0] << " , " << ul[1] << std::endl << br[0] << " , " << br[1] << std::endl << ur[0] << " , " << ur[1] << std::endl;
-		}
-	}
-	void Camera::Update(std::vector<Hall> Halls_, int HallsCount) {
-		quad[0].draw_quad();
-		quad[1].draw_quad();
 
-	}
+    float rt = 1;
+
+    void Camera::scale(float* p, float s) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 0)
+                p[i] = p[i] * s;
+            if (i % 3 == 1)
+                p[i] = p[i] * s;
+        }
+    }
+
+    void Camera::rotatez(float* p, float angle) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 0)
+                p[i] = cos(angle) * p[i] - sin(angle) * p[i + 1];
+            if (i % 3 == 1)
+                p[i] = cos(angle) * p[i] + sin(angle) * p[i - 1];
+        }
+    }
+    void Camera::rotatey(float* p, float angle) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 0)
+                p[i] = cos(angle) * p[i] - sin(angle) * p[i + 2];
+            if (i % 3 == 2)
+                p[i] = cos(angle) * p[i] + sin(angle) * p[i - 2];
+        }
+    }
+
+    void Camera::translatex(float* p, float s) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 0)
+                p[i] = p[i] + s;
+        }
+    }
+    void Camera::translatey(float* p, float s) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 2)
+                p[i] = p[i] + s;
+        }
+    }
+
+    float* Camera::perspective(float* p) {
+        float ret_p[24];
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 0)
+                ret_p[i] = p[i] / p[i + 2];
+            if (i % 3 == 1)
+                ret_p[i] = p[i] / p[i + 1];
+            if (i % 3 == 2)
+                ret_p[i] = 1;
+        }
+        return ret_p;
+    }
 private:
 
 };

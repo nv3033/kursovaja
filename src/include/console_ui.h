@@ -5,9 +5,12 @@
 #include<imgui_impl_opengl3.h>
 #include<iostream>
 #include<imgui_demo.cpp>
-//#include"objects.h"
-#include"camera.h"
-#include<linmath/linmath.h>
+#include"objectss.h"
+#include<map>
+#include <string>
+
+
+
 
 
 class console
@@ -23,12 +26,13 @@ public:
         return console->TextEditCallback(data);
     }
 
-    std::vector<Hall> halls;
-    int HallsCount = 0;
-    std::vector<Room> rooms;
-    int RoomsCount = 0;
+    std::vector<Wall> walls;
+    int WallsCount = 0;
     char log_[100000] = "";
-    Camera camera;
+    bool clicked = 0;
+    int curind;
+    bool is_in_walls;
+    //Camera camera;
 
     static int   Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }
     static int   Strnicmp(const char* s1, const char* s2, int n) { int d = 0; while (n > 0 && (d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; n--; } return d; }
@@ -38,8 +42,8 @@ public:
     void console::Draw(const char* title, bool* p_open)
     {
 
-        ImGui::SetNextWindowSize(ImVec2(520, 520), ImGuiCond_FirstUseEver);
-        ImGui::Begin("console");
+        ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("console", (bool *)1, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::MenuItem("Close Console"))
@@ -54,15 +58,22 @@ public:
             s = InputBuf;
             Strtrim(s);
             if (s[0] && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
-                addlog_(s);
                 SetCommand(s);
             }
             strcpy(s, "");
             reclaim_focus = true;
         }
-
         ExeCommand();
+        if (ImGui::Button("Button"))
+            clicked=true;
+        if (clicked)
+        {
+            memset(log_, 0, sizeof(log_));
+            clicked = false;
+        }
+
         ImGui::Separator();
+        ImGui::SetScrollHereY;
         ImGui::Text(log_);
         ImGui::SetItemDefaultFocus();
         if (reclaim_focus)
@@ -70,79 +81,122 @@ public:
 
 }
     void console::ExeCommand() {
-        camera.Update(halls, HallsCount);
+        //camera.Update(halls, HallsCount);
     }
     void console::SetCommand(char* Command) {
-        Hall h[2];
-        h[0].pos[0] = 3;
-        h[0].pos[1] = 1;
-        h[0].lenght = 3;
-        h[0].color = { 1, 0, 0 };
-        h[0].direction = 0;
-        halls.push_back(h[0]);
-        HallsCount++;
-
-
-        h[1].pos[0] = 6;
-        h[1].pos[1] = 1;
-        h[1].lenght = 3;
-        h[1].color = { 0, 0.5f, 0 };
-        h[1].direction = 0;
-        halls.push_back(h[1]);
-        camera.Init(halls, HallsCount);
-        /*std::string StringCommand(Command);
+        std::string StringCommand(Command);
         std::cout << "Command Input:: '" << StringCommand << "' " << std::endl;
-        if (StringCommand.length() >= 4) {
-            if (StringCommand[0] == 'd',
-                StringCommand[1] == 'r',
-                StringCommand[2] == 'a',
-                StringCommand[3] == 'w') {
-                if (ObjectsCount < 10) {
-                    ObjectsCount += 1;
-                    if (StringCommand.length() == 8 && Command[4] == ' ') {
-                        std::map <std::string, int> MapColorCodeCommand;
-                        MapColorCodeCommand["red"] = 0;
-                        MapColorCodeCommand["grn"] = 1;
-                        MapColorCodeCommand["blu"] = 2;
-                        switch (MapColorCodeCommand[{Command[5], Command[6], Command[7]}])
+        addlogstr_(StringCommand);
+
+        int numspaces = 0;
+        for (int i = 0; i < StringCommand.size(); i++)
+            if (StringCommand[i] == ' ') { numspaces++; }
+
+        if (numspaces == 1 && StringCommand.length() < 100 && StringCommand.length() > 4) {
+            std::map<std::string, int> MapCommand;
+            MapCommand[""] = 0;
+            MapCommand["adwl"] = 1;
+            MapCommand["wall"] = 2;
+            MapCommand["stwl"] = 3;
+            MapCommand["dlwl"] = 4;
+            MapCommand["wlnm"] = 5;
+            MapCommand["wlp1"] = 6;
+            MapCommand["wlp2"] = 7;
+            MapCommand["save"] = 8;
+
+            switch (MapCommand[StringCommand.substr(0, 4)])
+            {
+            case 1:
+                add_wall(StringCommand.substr(5, StringCommand.length()));
+                addlog_("\n");
+                addlog_("::wall added");
+                break;
+            case 2:
+                if(StringCommand.substr(5, StringCommand.length()) == "list")
+                    if (walls.size() > 0) {
+                        addlog_(":: walls -> ");
+                        for (int i = 0; i < walls.size(); i++)
                         {
-                        case 0:
-                            addlog_("::drawing...");
-                            for (int i = 0; i < ObjectsCount; i++)
-                                tr1[i].Init(1, 0, 0);
-                            break;
-                        case 1:
-                            addlog_("::drawing...");
-                            for (int i = 0; i < ObjectsCount; i++)
-                                tr1[i].Init(0, 1, 0);
-                            break;
-                        case 2:
-                            addlog_("::drawing...");
-                            for (int i = 0; i < ObjectsCount; i++)
-                                tr1[i].Init(0, 0, 1);
-                            break;
-                        default:
-                            errorcolorcode();
-                            break;
+                            addlogstr_(std::to_string(walls[i].id.id) + " " + walls[i].name);
                         }
+                        addlog_("\n");
                     }
-                    else {
-                        errorcolorcode();
+                    else
+                        addlog_("::ERROR -> no wallls");
+                else {
+                    addlog_("::ERROR -> invalid data");
+                }
+                break;
+            case 3:
+                is_in_walls = false;
+                for (int i = 0; i < WallsCount; i++) {
+                    //std::cout << std::to_string(walls[i].id.id) << " " << StringCommand.substr(5, StringCommand.length()) << std::endl;
+                    if (std::to_string(walls[i].id.id) == StringCommand.substr(5, StringCommand.length())) {
+                        curind = i;
+                        is_in_walls = true;
+                        break;
                     }
                 }
+                if (!is_in_walls) {
+                    addlog_("::ERROR -> not in the list");
+                }
+                else {
+                    std::string s = "::wall " + walls[curind].name + " is now being edited!";
+                    addlogstr_(s);
+                }
+                break;
+            default:
+                addlog_("::ERROR -> invalid data");
+                break;
             }
-            else 
-                if (StringCommand[0] == 'h',
-                StringCommand[1] == 'e',
-                StringCommand[2] == 'l',
-                StringCommand[3] == 'p')
-                addlog_("helpmessage");
-        }*/
+        }
+        else {
+            addlog_("::ERROR -> invalid command form");
+        }
     }
     
     void addlog_(char* s) {
         std::strcat(log_, s);
         std::strcat(log_, "\n");
+    } 
+    void addlogstr_(std::string s) {
+        char const* cpchar = s.c_str();
+        char pchar[100];
+        for (int i = 0; i < 100; i++)
+            pchar[i] = ' ';
+        for (int i = 0; i < s.length(); i++)
+            pchar[i] = cpchar[i];
+        addlog_(pchar);
+    }
+
+    void add_wall(std::string name) {
+        int new_id = 0;
+        bool not_in_mass = false;
+        while (!not_in_mass) {
+            not_in_mass = true;
+            for (int i = 0; i < WallsCount; i++)
+                if (walls[i].id.id == new_id)
+                {
+                    not_in_mass = false; new_id += 1; break;
+                }
+        }
+        Wall nw;
+        nw.id.id = new_id;
+        nw.draw = false;
+        nw.name = name;
+        nw.pos1[0] = 1;
+        nw.pos1[1] = 1;
+        nw.pos2[0] = 2;
+        nw.pos2[1] = 1;
+        walls.push_back(nw);
+        std::string s = std::to_string(new_id);
+        char const* cpchar = s.c_str();
+        char pchar[4];
+        for (int i = 0; i < 4; i++)
+            pchar[i] = cpchar[i];
+        addlog_("::id -> ");
+        addlog_(pchar);
+        WallsCount += 1;
     }
 
     private:
@@ -159,3 +213,19 @@ public:
 };
 
 console::~console() {}
+/*class commands
+{
+public:
+    commands() = default;
+    commands(const console& rhs);
+    ~commands();
+
+    */
+//
+//private:
+//
+//};
+//
+//commands::~commands() {
+
+//}
