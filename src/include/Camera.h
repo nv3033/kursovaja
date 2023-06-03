@@ -63,13 +63,18 @@ public:
                 p[i] = p[i] + s;
         }
     }
-    void Camera::translatey(float* p, float s) {
+    void Camera::translatez(float* p, float s) {
         for (int i = 0; i < 24; i++) {
             if (i % 3 == 2)
                 p[i] = p[i] + s;
         }
     }
-
+    void Camera::translatey(float* p, float s) {
+        for (int i = 0; i < 24; i++) {
+            if (i % 3 == 1)
+                p[i] = p[i] + s;
+        }
+    }
     float* Camera::perspective(float* p) {
         float ret_p[24];
         for (int i = 0; i < 24; i++) {
@@ -78,7 +83,16 @@ public:
             if (i % 3 == 1)
                 ret_p[i] = p[i] / p[i + 1];
             if (i % 3 == 2)
-                ret_p[i] = 1;
+            {
+                if (p[i] >= 0)
+                    ret_p[i] = 1;
+                else {
+                    ret_p[i-2] = 5;
+                    ret_p[i-1] = 5;
+                    ret_p[i] = 5;
+                }
+            }
+            //if (abs(ret_p[i]) >= 1)ret_p[i] = 1;
         }
         return ret_p;
     }

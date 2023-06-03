@@ -1,20 +1,21 @@
-﻿#include <iostream>
-//#include <glad/glad.h>
-//#include <GLFW/glfw3.h>
-#include <imgui.h>
+﻿#include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
-#include <map>
-#include <string>
+#include <linmath/linmath.h>
+
 #include "include/Window_header.h"
 #include "include/console_ui.h"
 #include "include/shaders/shader.h"
-#include <linmath/linmath.h>
 #include "include/graphics_editor.h"
 #include "include/objectss.h"
 #include "include/Camera.h"
-#include <array>
+#include "include/keyboard.h"
+#include "include/resources_generator.h"
 
+#include <iostream>
+#include <map>
+#include <string>
+#include <array>
 
 static int start_engine() {
     std::cout << "Into The Void ENGINE 0.0.1:2023" << std::endl;
@@ -72,10 +73,15 @@ static int open_engine_game() {
     window window_game(480, 480, "game title");
     window_game.create();
 
+    Camera c;
+
+    Resources_generator rg;
+
+    GLfloat perp[24];
     Wall::_color_ color = { 1, 0, 0 };
     Wall::_color_ color2 = { 0.5f, 0, 0 };
 
-    Camera c;
+    /*Camera c;
 
     float perp[24];
 
@@ -98,19 +104,23 @@ static int open_engine_game() {
             color.r, color.g, color.b,
             color2.r, color2.g, color2.b,
             color2.r, color2.g, color2.b
-    };
+    };*/
     
-    /*for (int i = 0; i < 24; i++) {
-        if (i % 3 == 0)
-            std::cout << perspective(p)[i] << " ";
-        if (i % 3 == 1)            
-            std::cout << perspective(p)[i] << " ";
-        if (i % 3 == 2)
-            std::cout << perspective(p)[i] << std::endl;
-    }*/
-    
-    
+    //bool Collide_positeve_with_wall1 = false;
+    //bool Collide_with_wall2 = false;
+
     Quad q;
+
+    GLfloat p[24];
+    rg.points();
+    for (int i = 0; i < 24; i++)
+        p[i] = rg.get_point(i);
+    GLfloat colors[24];
+    rg.color();
+    for (int i = 0; i < 24; i++)
+        colors[i] = rg.get_color(i);
+
+    std::cout << p[2] << " " << p[3] << " " << p[6] << " " << p[9] << std::endl;
 
     for (int i = 0; i < 24; i++) 
         perp[i] = c.perspective(p)[i];
@@ -123,8 +133,28 @@ static int open_engine_game() {
     {
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
-        shader.use();
-        c.rotatey(p, 0.00005f);
+        shader.use(); 
+
+
+
+        if (glfwGetKey(window_game.get_glfw_window(), GLFW_KEY_D) == GLFW_PRESS)
+        {
+            c.rotatey(p, 0.0005f);
+        }
+        if (glfwGetKey(window_game.get_glfw_window(), GLFW_KEY_A) == GLFW_PRESS)
+        {
+            c.rotatey(p, -0.0005f);
+        }
+        if (glfwGetKey(window_game.get_glfw_window(), GLFW_KEY_W) == GLFW_PRESS)
+        {
+            c.translatez(p, -0.0005f);
+        }
+        if (glfwGetKey(window_game.get_glfw_window(), GLFW_KEY_S) == GLFW_PRESS)
+        {
+            c.translatez(p, 0.0005f);
+        }
+        
+        
         //c.translatex(p, 0.00001f);
         for (int i = 0; i < 24; i++) 
             perp[i] = c.perspective(p)[i];

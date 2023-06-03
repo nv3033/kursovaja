@@ -26,6 +26,7 @@ public:
             red, green, blu
         };
 
+
         GLuint VertexArrayID;
         glGenVertexArrays(1, &VertexArrayID);
         glBindVertexArray(VertexArrayID);

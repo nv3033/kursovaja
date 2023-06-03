@@ -57,6 +57,14 @@ build CMakeFiles\IntoTheVoidEngine.dir\src\console.cpp.obj: CXX_COMPILER__IntoTh
   TARGET_COMPILE_PDB = CMakeFiles\IntoTheVoidEngine.dir\
   TARGET_PDB = IntoTheVoidEngine.pdb
 
+build CMakeFiles\IntoTheVoidEngine.dir\src\include\texture_manager.cpp.obj: CXX_COMPILER__IntoTheVoidEngine_unscanned_Debug C$:\Users\ant\Desktop\GitHub\kursovaja\src\include\texture_manager.cpp || cmake_object_order_depends_target_IntoTheVoidEngine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Users\ant\Desktop\GitHub\kursovaja\external\glfw\include -IC:\Users\ant\Desktop\GitHub\kursovaja\external\glad\include -IC:\Users\ant\Desktop\GitHub\kursovaja\external\imgui\backends -IC:\Users\ant\Desktop\GitHub\kursovaja\external\imgui -IC:\Users\ant\Desktop\GitHub\kursovaja\external
+  OBJECT_DIR = CMakeFiles\IntoTheVoidEngine.dir
+  OBJECT_FILE_DIR = CMakeFiles\IntoTheVoidEngine.dir\src\include
+  TARGET_COMPILE_PDB = CMakeFiles\IntoTheVoidEngine.dir\
+  TARGET_PDB = IntoTheVoidEngine.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target IntoTheVoidEngine
@@ -65,7 +73,7 @@ build CMakeFiles\IntoTheVoidEngine.dir\src\console.cpp.obj: CXX_COMPILER__IntoTh
 #############################################
 # Link the executable IntoTheVoidEngine.exe
 
-build IntoTheVoidEngine.exe: CXX_EXECUTABLE_LINKER__IntoTheVoidEngine_Debug CMakeFiles\IntoTheVoidEngine.dir\src\console.cpp.obj | external\glfw\src\glfw3.lib external\glad\glad.lib external\imgui\ImGui.lib external\glfw\src\glfw3.lib external\glad\glad.lib || external\glad\glad.lib external\glfw\src\glfw3.lib external\imgui\ImGui.lib
+build IntoTheVoidEngine.exe: CXX_EXECUTABLE_LINKER__IntoTheVoidEngine_Debug CMakeFiles\IntoTheVoidEngine.dir\src\console.cpp.obj CMakeFiles\IntoTheVoidEngine.dir\src\include\texture_manager.cpp.obj | external\glfw\src\glfw3.lib external\glad\glad.lib external\imgui\ImGui.lib external\glfw\src\glfw3.lib external\glad\glad.lib || external\glad\glad.lib external\glfw\src\glfw3.lib external\imgui\ImGui.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = external\glfw\src\glfw3.lib  external\glad\glad.lib  external\imgui\ImGui.lib  external\glfw\src\glfw3.lib  external\glad\glad.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

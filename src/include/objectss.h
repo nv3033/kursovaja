@@ -1,6 +1,7 @@
 #pragma once
 #include <linmath/linmath.h>
 #include <string>
+#include <glad/glad.h>
 
 
 class Wall
@@ -10,7 +11,7 @@ public:
 		int id;
 	};
 	struct _color_ {
-		float r; float g; float b;
+		GLfloat r; GLfloat g; GLfloat b;
 	};
 
 	Wall() = default;
@@ -21,6 +22,7 @@ public:
 	std::string name;
 	vec2 pos2;
 	bool draw = false;
+	_color_ color;
 	
 	 Wall::Wall(wall_id id_, float pos1x_, float pos1y_, float pos2x_, float pos2y_, bool draw_) {
 		id = id_;
