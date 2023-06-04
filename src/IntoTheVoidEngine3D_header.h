@@ -13,6 +13,7 @@
 #include "include/resources_generator.h"
 
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <string>
 #include <array>
@@ -21,6 +22,10 @@ static int start_engine() {
     std::cout << "Into The Void ENGINE 0.0.1:2023" << std::endl;
     return 0;
 }
+
+
+
+console con;
 
 static int open_engine_editor() {
 
@@ -35,7 +40,6 @@ static int open_engine_editor() {
     io.DisplaySize.x = 1280;
     io.DisplaySize.y = 720;
 
-    console con;
     bool open = true;
     Shader shader("C:/users/ant/Desktop/GitHub/kursovaja/src/include/shaders/vertex/triangle-shader.vs",
         "C:/users/ant/Desktop/GitHub/kursovaja/src/include/shaders/fragment/triangle-shader.fs");
@@ -68,6 +72,8 @@ static int open_engine_editor() {
 
 static int engine_close() { return 1; }
 
+Resources_generator rg;
+
 static int open_engine_game() {
 
     window window_game(480, 480, "game title");
@@ -75,7 +81,6 @@ static int open_engine_game() {
 
     Camera c;
 
-    Resources_generator rg;
 
     GLfloat perp[24];
     Wall::_color_ color = { 1, 0, 0 };
@@ -105,14 +110,14 @@ static int open_engine_game() {
             color2.r, color2.g, color2.b,
             color2.r, color2.g, color2.b
     };*/
-    
+
     //bool Collide_positeve_with_wall1 = false;
     //bool Collide_with_wall2 = false;
 
     Quad q;
 
     GLfloat p[24];
-    rg.points();
+    rg.points(con);
     for (int i = 0; i < 24; i++)
         p[i] = rg.get_point(i);
     GLfloat colors[24];
@@ -167,12 +172,56 @@ static int open_engine_game() {
     return 0;
 }
 
+char file_name[50];
+char file_buff[2048];
+
+static int open_file() {
+    std::cout << "PLEASE INPUT FILE NAME" << std::endl;
+    std::cin >> file_name;
+    std::ifstream fin(file_name);
+
+    if (!fin.is_open())
+        std::cout << "error opening file\n";
+    else {
+        fin >> file_buff;
+        fin.get(file_buff, 2048);
+    }
+    Wall new_wall;
+    int spacescount;
+    for (int i = 0; i < 2048; i++) {
+        if (file_buff[i] == ' ')
+            spacescount++;
+    }
+    std::cout << file_buff << std::endl;
+    return 0;
+}
+
+static int save_game() {
+
+    std::cout << "PLEASE INPUT FILE NAME" << std::endl;
+    std::cin >> file_name;
+    std::ofstream fout(file_name);
+    if (!fout.is_open()) {
+        std::cout << "file does not exist. creating new...";
+        std::ofstream oFile(file_name);
+    }
+    fout.clear();
+    for (int i = 0; i < con.WallsCount; i++) {
+        fout<< "1" << " " << con.walls[i].pos1[0] << " " << con.walls[i].pos1[1] << " " << con.walls[i].pos2[0] << " " << con.walls[i].pos2[1] << " ";
+    }
+    std::cout << "file " << file_name << " is successfuly written." << std::endl;
+    return 0;
+}
+
+
 static int execute_input(const std::string input) {
     std::map <std::string, int> inpt;
     inpt[""] = 0;
     inpt["start_editor"] = 1;
     inpt["close"] = 2;
     inpt["start_game"] = 3;
+    inpt["open_file"] = 4;
+    inpt["save_game"] = 5;
     int i = inpt[input];
     switch (i)
     {
@@ -184,6 +233,10 @@ static int execute_input(const std::string input) {
         return engine_close();
     case 3:
         return open_engine_game();
+    case 4:
+        return open_file();
+    case 5:
+        return save_game();
     default:
         break;
     }

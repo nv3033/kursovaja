@@ -2,6 +2,8 @@
 #include"objectss.h"
 #include"glad/glad.h"
 
+#include "console_ui.h"
+
 #include<iostream>
 
 
@@ -18,22 +20,14 @@ public:
     GLfloat colors[24] = {};
 
 
-    GLfloat* Resources_generator::points() {
-        float walls[] = { 0.5f, 1, 0.5f, 2, -0.5f, 1, -0.5f, 2 };
-            /*0.5f, -0.5f, 2,
-            0.5f, 0.5f, 2,
-            0.5f, -0.5f, 1,
-            0.5f, 0.5f, 1,
-            -0.5f, -0.5f, 1,
-            -0.5f, 0.5f, 1,
-            -0.5f, -0.5f, 2,
-            -0.5f, 0.5f, 2
-        };*/
+    GLfloat* Resources_generator::points(console con) {
+        float walls_rendering[512] = {  };
+
         for (int i = 0; i < 4; i++) {
-            p[i * 6] = walls[i*2];
-            p[i * 6 + 2] = walls[i*2 + 1];
-            p[i * 6 + 3] = walls[i*2];
-            p[i * 6 + 5] = walls[i*2 + 1];
+            p[i * 6] = walls_rendering[i*2];
+            p[i * 6 + 2] = walls_rendering[i*2 + 1];
+            p[i * 6 + 3] = walls_rendering[i*2];
+            p[i * 6 + 5] = walls_rendering[i*2 + 1];
             p[i * 6 + 1] = -0.5f;
             p[i * 6 + 4] = 0.5f;
         }

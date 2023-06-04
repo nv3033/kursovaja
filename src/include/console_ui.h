@@ -12,6 +12,7 @@
 
 
 
+ 
 
 class console
 {
@@ -20,14 +21,15 @@ public:
     console(const console& rhs);
     ~console();
 
+    std::vector<Wall> walls;
+    int WallsCount = 0;
+
     static int TextEditCallbackStub(ImGuiInputTextCallbackData* data)
     {
         ExampleAppConsole* console = (ExampleAppConsole*)data->UserData;
         return console->TextEditCallback(data);
     }
 
-    std::vector<Wall> walls;
-    int WallsCount = 0;
     char log_[100000] = "";
     bool clicked = 0;
     int curind;
@@ -55,16 +57,16 @@ public:
             ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
         if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf)), input_text_flags, &TextEditCallbackStub, (void*)this)
         {
-            s = InputBuf;
-            Strtrim(s);
-            if (s[0] && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
-                SetCommand(s);
+            StringCommand = InputBuf;
+            Strtrim(StringCommand);
+            if (StringCommand[0] && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
+                SetCommand(StringCommand);
             }
-            strcpy(s, "");
+            strcpy(StringCommand, "");
             reclaim_focus = true;
         }
         ExeCommand();
-        if (ImGui::Button("Button"))
+        if (ImGui::Button("Clear"))
             clicked=true;
         if (clicked)
         {
@@ -98,11 +100,12 @@ public:
             MapCommand["adwl"] = 1;
             MapCommand["wall"] = 2;
             MapCommand["stwl"] = 3;
-            MapCommand["dlwl"] = 4;
-            MapCommand["wlnm"] = 5;
-            MapCommand["wlp1"] = 6;
-            MapCommand["wlp2"] = 7;
-            MapCommand["save"] = 8;
+            MapCommand["delt"] = 4;
+            MapCommand["save"] = 5;
+            MapCommand["wp1x"] = 6;
+            MapCommand["wp1y"] = 7;
+            MapCommand["wp2x"] = 8;
+            MapCommand["wp2y"] = 9;
 
             switch (MapCommand[StringCommand.substr(0, 4)])
             {
@@ -112,20 +115,29 @@ public:
                 addlog_("::wall added");
                 break;
             case 2:
-                if(StringCommand.substr(5, StringCommand.length()) == "list")
                     if (walls.size() > 0) {
-                        addlog_(":: walls -> ");
-                        for (int i = 0; i < walls.size(); i++)
-                        {
-                            addlogstr_(std::to_string(walls[i].id.id) + " " + walls[i].name);
+                        if (StringCommand.substr(5, StringCommand.length()) == "list") {
+                            addlog_(":: walls -> ");
+                            for (int i = 0; i < walls.size(); i++)
+                            {
+                                addlogstr_(std::to_string(walls[i].id.id) + " " + walls[i].name);
+                            }
+                            addlog_("\n");
                         }
-                        addlog_("\n");
+                        else if (StringCommand.substr(5, StringCommand.length()) == "delete") {
+                                walls.erase(walls.begin() + curind);
+                                addlog_("\n");
+                                addlog_("::wall deleted");
+                                WallsCount--;
+                        }
+                        else {
+
+                            addlog_("::ERROR -> invalid data");
+                        }
                     }
-                    else
+                    else {
                         addlog_("::ERROR -> no wallls");
-                else {
-                    addlog_("::ERROR -> invalid data");
-                }
+                    }
                 break;
             case 3:
                 is_in_walls = false;
@@ -144,6 +156,28 @@ public:
                     std::string s = "::wall " + walls[curind].name + " is now being edited!";
                     addlogstr_(s);
                 }
+                break;
+            case 4:
+                break;
+            case 6:
+                StringCommand.erase(0, StringCommand.find(" ") + 1);
+                walls[curind].pos1[0] = std::stoi(StringCommand);
+                addlog_("::your wall position No.1 X is now set");
+                break;
+            case 7:
+                StringCommand.erase(0, StringCommand.find(" ") + 1);
+                walls[curind].pos1[1] = std::stoi(StringCommand);
+                addlog_("::your wall position No.1 Y is now set");
+                break;
+            case 8:
+                StringCommand.erase(0, StringCommand.find(" ") + 1);
+                walls[curind].pos2[0] = std::stoi(StringCommand);
+                addlog_("::your wall position No.2 X is now set");
+                break;
+            case 9:
+                StringCommand.erase(0, StringCommand.find(" ") + 1);
+                walls[curind].pos2[1] = std::stoi(StringCommand);
+                addlog_("::your wall position No.2 Y is now set");
                 break;
             default:
                 addlog_("::ERROR -> invalid data");
@@ -201,7 +235,7 @@ public:
 
     private:
         char                  InputBuf[256];
-        char* s;
+        char* StringCommand;
         std::vector<char*>       Items;
         std::vector<const char*> Commands;
         std::vector<char*>       History;
